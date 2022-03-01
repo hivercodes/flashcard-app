@@ -7,6 +7,12 @@ df = pandas.read_csv("data/french_words.csv")
 data_dict = df.to_dict(orient="records")
 
 first_run = 1
+word_dict = {}
+
+def timer():
+    window.after(3000, next_answer)
+
+
 
 def button_press():
     pass
@@ -16,15 +22,22 @@ def button_press():
 def new_word():
     global first_run
     first_run = 0
-    new_index = random.randint(0, len(df)-1)
+    global word_dict
+    new_index = random.randint(0, len(df) - 1)
     word_dict = data_dict[new_index]
-    canvas.itemconfig(word_text, text=word_dict["French"])
+    canvas.itemconfig(canvas_image, image=front_image)
+    canvas.itemconfig(language_text, text="French", fill="black")
+    canvas.itemconfig(word_text, text=word_dict["French"], fill="black")
+    timer()
 
 
 
 
-def next_answer(word_dict):
-    canvas.itemconfig(word_text, text=word_dict["English"])
+
+
+def next_answer():
+    canvas.itemconfig(language_text, text="English", fill="white")
+    canvas.itemconfig(word_text, text=word_dict["English"], fill="white")
     canvas.itemconfig(canvas_image, image=back_image)
 
 
@@ -69,7 +82,7 @@ if first_run == 1:
 
 
 
-
+timer()
 
 
 
