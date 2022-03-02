@@ -8,7 +8,7 @@ data_dict = df.to_dict(orient="records")
 
 first_run = 1
 word_dict = {}
-
+print(data_dict)
 def timer():
     window.after(3000, next_answer)
 
@@ -31,7 +31,11 @@ def new_word():
     timer()
 
 
-
+def remove_from_list():
+    for item in data_dict:
+        if item == word_dict:
+            data_dict.pop(data_dict.index(word_dict))
+    new_word()
 
 
 
@@ -70,7 +74,7 @@ canvas.grid(column=0, row=0, columnspan=2)
 wrong_button = Button(image=fail_image, highlightthickness=0, command=new_word)
 wrong_button.grid(column=0, row=1)
 
-success_button = Button(image=success_image, highlightthickness=0, command=new_word)
+success_button = Button(image=success_image, highlightthickness=0, command=remove_from_list)
 success_button.grid(column=1, row=1)
 
 
