@@ -3,12 +3,22 @@ import pandas
 import random
 
 BACKGROUND_COLOR = "#B1DDC6"
-df = pandas.read_csv("data/french_words.csv")
+
+try:
+    df = pandas.read_csv("data/words_to_learn.csv")
+except FileNotFoundError:
+    df = pandas.read_csv("data/french_words.csv")
+
+
+
+
 data_dict = df.to_dict(orient="records")
 
 first_run = 1
 word_dict = {}
 print(data_dict)
+
+
 def timer():
     window.after(3000, next_answer)
 
@@ -24,7 +34,13 @@ def new_word():
     first_run = 0
     global word_dict
     new_index = random.randint(0, len(df) - 1)
-    word_dict = data_dict[new_index]
+    try:
+        word_dict = data_dict[new_index]
+    except IndexError:
+        if new_index >= 1 and new_index <= len(data_dict):
+            word_dict = data_dict[new_index - 1]
+        else:
+            word_dict = data_dict[new_index + 1]
     canvas.itemconfig(canvas_image, image=front_image)
     canvas.itemconfig(language_text, text="French", fill="black")
     canvas.itemconfig(word_text, text=word_dict["French"], fill="black")
@@ -32,10 +48,14 @@ def new_word():
 
 
 def remove_from_list():
-    for item in data_dict:
-        if item == word_dict:
-            data_dict.pop(data_dict.index(word_dict))
-    new_word()
+    try:
+        for item in data_dict:
+            if item == word_dict:
+                data_dict.pop(data_dict.index(word_dict))
+    finally:
+        new_word()
+        df2 = pandas.DataFrame(data_dict)
+        df2.to_csv("data/words_to_learn.csv", index=False)
 
 
 
@@ -43,6 +63,7 @@ def next_answer():
     canvas.itemconfig(language_text, text="English", fill="white")
     canvas.itemconfig(word_text, text=word_dict["English"], fill="white")
     canvas.itemconfig(canvas_image, image=back_image)
+
 
 
 
